@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-'''contains the add function'''
+'''
+    contains the add function
+'''
 
 def add(a: float, b: float) -> float:
-    return float(a + b)
+    '''
+        returns sum of two floats
+    '''
+    return a + b
