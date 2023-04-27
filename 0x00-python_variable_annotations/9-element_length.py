@@ -5,7 +5,7 @@ contains the element_length function
 from typing import List, Tuple, Iterable, Sequence
 
 
-def element_length(lst: List[int]) -> List[Tuple[Sequence, int]]:
+def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
     '''
     returns a list of integer tupples
     '''
