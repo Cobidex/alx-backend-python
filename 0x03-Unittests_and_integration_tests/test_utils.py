@@ -29,8 +29,7 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map_exception(self, collection: dict,
                                          keys: list) -> None:
         '''checks if the KeyError exception is raised'''
-        with self.assertRaises(KeyError):
-            access_nested_map(collection, keys)
+        self.assertRaises(KeyError, access_nested_map, collection, keys)
 
 
 if __name__ == "__main__":
