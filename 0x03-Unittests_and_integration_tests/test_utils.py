@@ -21,3 +21,7 @@ class TestAccessNestedMap(unittest.TestCase):
                                keys: list, value: Any) -> None:
         '''tests the access_nested_map method'''
         self.assertEqual(access_nested_map(collection, keys), value)
+
+
+if __name__ == "__main__":
+    unittest.main()
