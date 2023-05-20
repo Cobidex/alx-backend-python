@@ -3,6 +3,7 @@
 contains the test class TestAccessNestedMap
 '''
 import unittest
+from typing import Any
 from parameterized import parameterized
 from utils import access_nested_map
 
@@ -16,6 +17,6 @@ class TestAccessNestedMap(unittest.TestCase):
         ({'a': {'b': 2}}, ('a',), {'b': 2}),
         ({'a': {'b': 2}}, ('a', 'b',), 2)
         ])
-    def test_access_nested_map(self, collection, keys, value):
+    def test_access_nested_map(self, collection: dict, keys: list, value: Any) -> None:
         '''tests the access_nested_map method'''
         self.assertEqual(access_nested_map(collection, keys), value)
