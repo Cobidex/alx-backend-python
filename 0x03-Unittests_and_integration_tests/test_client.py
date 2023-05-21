@@ -52,3 +52,18 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result, ['repo1'])
             mock_pur.assert_called_once
             mock_get_json.assert_called_once
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", False),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+        ])
+    @patch('client.access_nested_map')
+    def test_has_license(self, repo: dict, license_key: str,
+                         value: bool, mock_access):
+        '''
+        test the has_license method
+        '''
+        mock_access.return_value = value
+        t_client = GithubOrgClient("google")
+        result = t_client.has_license(repo, license_key)
+        self.assertEqual(result, value)
