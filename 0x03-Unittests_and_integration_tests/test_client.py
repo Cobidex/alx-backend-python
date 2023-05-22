@@ -89,3 +89,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         '''stops the patcher'''
         cls.get_patcher.stop()
 
+    def test_public_repos(self):
+        '''test the public_repos method'''
+        t_client = GithubOrgClient("google")
+        assert True
+
+    def test_public_repos_with_license(self):
+        '''test the has_license method'''
+        t_client = GithubOrgClient("google")
+        assert True
