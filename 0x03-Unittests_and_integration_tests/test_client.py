@@ -3,7 +3,7 @@
 contains the TestGithubOrgClient class
 '''
 import unittest
-from unittest.mock import patch, PropertyMock, Mock
+from unittest.mock import patch, PropertyMock, MagicMock
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 from parameterized import parameterized, parameterized_class
@@ -82,19 +82,30 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         '''executes before tests to start a patcher'''
-        cls.get_patcher = patch('requests.get', side_effect=HTTPError)
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+        cls.mock_get.side_effect = cls.my_side_effect
+
+    @classmethod
+    def my_side_effect(cls, url):
+        '''modifies return value of mocked request.get'''
+        if url == 'https://api.github.com/orgs/google':
+            response = MagicMock()
+            response.json.return_value = cls.org_payload
+            return response
+        elif url == 'https://api.github.com/orgs/google/repos':
+            response = MagicMock()
+            response.json.return_value = cls.repos_payload
+            return response
+
 
     @classmethod
     def tearDownClass(cls):
         '''stops the patcher'''
-        cls.get_patcher.stop()
-
-    def test_public_repos(self):
-        '''test the public_repos method'''
-        t_client = GithubOrgClient("google")
-        assert True
+        cls.mock_get.stop()
 
     def test_public_repos_with_license(self):
         '''test the has_license method'''
         t_client = GithubOrgClient("google")
-        assert True
+        repos = t_client.public_repos(license='apache-2.0')
+        self.assertEqual(repos, self.apache2_repos)
