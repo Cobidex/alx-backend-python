@@ -115,13 +115,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         Test the public_repos method
         """
         t_client = GithubOrgClient('google')
-        repos = t_client.public_repos()
-        self.assertEqual(repos, self.__class__.expected_repos)
+        repos: dict = t_client.public_repos()
+        self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self):
         '''
         test the has_license method
         '''
         t_client = GithubOrgClient("google")
-        repos = t_client.public_repos(license='apache-2.0')
-        self.assertEqual(repos, self.__class__.apache2_repos)
+        repos: dict = t_client.public_repos(license='apache-2.0')
+        self.assertEqual(repos, self.apache2_repos)
