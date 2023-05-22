@@ -87,7 +87,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.mock_get.side_effect = cls.my_side_effect
 
     @classmethod
-    def my_side_effect(cls, url):
+    def my_side_effect(cls, url: str) -> MagicMock:
         '''modifies return value of mocked request.get'''
         if url == 'https://api.github.com/orgs/google':
             response = MagicMock()
@@ -97,7 +97,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             response = MagicMock()
             response.json.return_value = cls.repos_payload
             return response
-
 
     @classmethod
     def tearDownClass(cls):
