@@ -3,6 +3,7 @@
 contains the TestGithubOrgClient class
 '''
 import unittest
+from typing import Any
 from unittest.mock import patch, PropertyMock, MagicMock
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
@@ -80,14 +81,19 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     contains method for the integration tests
     '''
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         '''executes before tests to start a patcher'''
         cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
         cls.mock_get.side_effect = cls.my_side_effect
 
     @classmethod
-    def my_side_effect(cls, url: str) -> MagicMock:
+    def tearDownClass(cls) -> None:
+        '''stops the patcher after test is run'''
+        cls.mock_get.stop()
+
+    @classmethod
+    def my_side_effect(cls, url: str) -> Any:
         '''modifies return value of mocked request.get'''
         if url == 'https://api.github.com/orgs/google':
             response = MagicMock()
@@ -97,11 +103,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             response = MagicMock()
             response.json.return_value = cls.repos_payload
             return response
-
-    @classmethod
-    def tearDownClass(cls):
-        '''stops the patcher'''
-        cls.mock_get.stop()
 
     def test_public_repos_with_license(self):
         '''test the has_license method'''
