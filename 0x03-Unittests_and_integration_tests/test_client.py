@@ -3,9 +3,11 @@
 contains the TestGithubOrgClient class
 '''
 import unittest
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock, Mock
 from client import GithubOrgClient
-from parameterized import parameterized
+from fixtures import TEST_PAYLOAD
+from parameterized import parameterized, parameterized_class
+from urllib.error import HTTPError
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -67,3 +69,23 @@ class TestGithubOrgClient(unittest.TestCase):
         t_client = GithubOrgClient("google")
         result = t_client.has_license(repo, license_key)
         self.assertEqual(result, value)
+
+
+@parameterized_class(
+        ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+        TEST_PAYLOAD
+        )
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    '''
+    contains method for the integration tests
+    '''
+    @classmethod
+    def setUpClass(cls):
+        '''executes before tests to start a patcher'''
+        cls.get_patcher = patch('requests.get', side_effect=HTTPError)
+
+    @classmethod
+    def tearDownClass(cls):
+        '''stops the patcher'''
+        cls.get_patcher.stop()
+
