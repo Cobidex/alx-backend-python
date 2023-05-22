@@ -80,6 +80,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     '''
     contains method for the integration tests
     '''
+
     @classmethod
     def setUpClass(cls) -> None:
         '''
@@ -115,7 +116,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         Test the public_repos method
         """
         t_client = GithubOrgClient('google')
-        repos: dict = t_client.public_repos()
+        repos: dict[str, Any] = t_client.public_repos()
         self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self):
@@ -123,5 +124,5 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         test the has_license method
         '''
         t_client = GithubOrgClient("google")
-        repos: dict = t_client.public_repos(license='apache-2.0')
+        repos: dict[str, Any] = t_client.public_repos(license='apache-2.0')
         self.assertEqual(repos, self.apache2_repos)
