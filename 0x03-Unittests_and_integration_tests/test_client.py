@@ -102,14 +102,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         '''
         modifies return value of mocked request.get
         '''
+        response = MagicMock()
         if url == 'https://api.github.com/orgs/google':
-            response = MagicMock()
             response.json.return_value = cls.org_payload
-            return response
         elif url == 'https://api.github.com/orgs/google/repos':
-            response = MagicMock()
             response.json.return_value = cls.repos_payload
-            return response
+        return response
 
     def test_public_repos(self):
         """
