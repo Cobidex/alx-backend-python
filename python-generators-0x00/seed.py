@@ -30,6 +30,7 @@ def create_table(connection):
         age DECIMAL NOT NULL\
         )"
     )
+    cursor.execute("CREATE INDEX user_id_index ON user_data (user_id)")
 
 def insert_data(connection, data):
     df = pd.read_csv(data)
