@@ -18,4 +18,4 @@ def batch_processing():
     for batch in stream_users_in_batches(10):
         for user in batch:
             if user[3] > 25:
-                print(user)
+                return user
