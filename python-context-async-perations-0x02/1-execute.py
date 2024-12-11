@@ -16,3 +16,13 @@ class ExecuteQuery:
     def __exit__(self, exc_type, exc_value, traceback):
         if self.connection:
             self.connection.close()
+
+def main():
+    db_name = "example.db"
+
+    with ExecuteQuery(db_name, query, params) as results:
+        for row in results:
+            print(row)
+
+if __name__ == "__main__":
+    main()
