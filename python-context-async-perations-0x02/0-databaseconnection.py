@@ -15,6 +15,7 @@ class DatabaseConnection:
 
 def main():
     db_name = "users.db"
+    result = None
 
     with DatabaseConnection(db_name) as conn:
         cursor = conn.cursor()
