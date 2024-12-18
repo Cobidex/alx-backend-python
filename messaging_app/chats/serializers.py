@@ -39,6 +39,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
         fields = ['conversation_id', 'participants', 'messages', 'created_at']
+        depth = 1
 
     def validate_participants(self, value):
         """
