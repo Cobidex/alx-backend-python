@@ -12,11 +12,9 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = []
 
-
 class MessageViewSet(viewsets.ModelViewSet):
     """
     ViewSet for listing and creating messages within conversations.
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-
