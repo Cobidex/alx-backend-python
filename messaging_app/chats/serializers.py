@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'role', 'full_name']
+        fields = '__all__'
 
     def get_full_name(self, obj):
         """
@@ -26,7 +26,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['message_id', 'sender', 'sender_name', 'message_body', 'sent_at']
+        fields = '__all__'
 
 
 class ConversationSerializer(serializers.ModelSerializer):
@@ -38,7 +38,7 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conversation
-        fields = ['conversation_id', 'participants', 'messages', 'created_at']
+        fields = '__all__'
         depth = 1
 
     def validate_participants(self, value):
