@@ -12,6 +12,12 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = []
 
+    def get_queryset(self):
+        """
+        Return conversations where the user is a participant.
+        """
+        return Conversation.objects.filter(participants=self.request.user)
+
     def create(self, request, *args, **kwargs):
         """
         Create a new conversation with participants.
