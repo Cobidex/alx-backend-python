@@ -3,7 +3,7 @@ from .models import Message, Notification
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'receiver', 'sent_at')
+    list_display = ('sender', 'receiver', 'timestamp')
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
