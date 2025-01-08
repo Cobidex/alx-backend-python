@@ -18,5 +18,7 @@ def log_message_edit(sender, instance, **kwargs):
                     old_content=old_message.content
                 )
                 instance.edited = True
+                instance.edited_by = instance.sender
+                instance.edited_at = instance.timestamp
         except Message.DoesNotExist:
             pass
