@@ -28,7 +28,7 @@ def fetch_replies(message):
 
 @login_required
 def get_threaded_conversation(request, message_id):
-    root_message = get_object_or_404(Message.objects.select_related('sender', 'recipient'), id=message_id)
+    root_message = get_object_or_404(Message.objects.select_related('sender', 'receiver'), id=message_id)
     if root_message.recipient != request.user and root_message.sender != request.user:
         return JsonResponse({"error": "Unauthorized"}, status=403)
 
