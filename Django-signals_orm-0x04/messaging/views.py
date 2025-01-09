@@ -1,5 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
+from django.http import JsonResponse
+from .models import Message
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 @login_required
 def delete_user(request):
@@ -8,3 +12,62 @@ def delete_user(request):
         user.delete()
         return redirect('home')
     return redirect('home')
+
+def fetch_replies(message):
+    replies = list(message.replies.select_related('sender').all())
+    return [
+        {
+            "id": reply.id,
+            "sender": reply.sender.username,
+            "content": reply.content,
+            "timestamp": reply.timestamp,
+            "replies": fetch_replies(reply),
+        }
+        for reply in replies
+    ]
+
+@login_required
+def get_threaded_conversation(request, message_id):
+    root_message = get_object_or_404(Message.objects.select_related('sender', 'recipient'), id=message_id)
+    if root_message.recipient != request.user and root_message.sender != request.user:
+        return JsonResponse({"error": "Unauthorized"}, status=403)
+
+    threaded_conversation = {
+        "id": root_message.id,
+        "sender": root_message.sender.username,
+        "content": root_message.content,
+        "timestamp": root_message.timestamp,
+        "replies": fetch_replies(root_message),
+    }
+    return JsonResponse(threaded_conversation, safe=False)
+
+@csrf_exempt
+@login_required
+def create_message(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        content = data.get("content")
+        recipient_id = data.get("recipient_id")
+        parent_message_id = data.get("parent_message_id")
+
+        if not content or not recipient_id:
+            return JsonResponse({"error": "Content and recipient are required"}, status=400)
+
+        # Optional parent message for replies
+        parent_message = None
+        if parent_message_id:
+            parent_message = get_object_or_404(Message, id=parent_message_id)
+
+        message = Message.objects.create(
+            sender=request.user,
+            recipient_id=recipient_id,
+            content=content,
+            parent_message=parent_message,
+        )
+        return JsonResponse({"message": "Message created successfully", "id": message.id}, status=201)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
