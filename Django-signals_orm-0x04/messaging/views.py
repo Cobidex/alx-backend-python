@@ -71,3 +71,21 @@ def create_message(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+@login_required
+def get_user_conversations(request):
+    messages = Message.objects.filter(
+        recipient=request.user
+    ).select_related('sender', 'parent_message')
+
+    conversations = [
+        {
+            "id": message.id,
+            "sender": message.sender.username,
+            "content": message.content,
+            "timestamp": message.timestamp,
+            "parent_message_id": message.parent_message.id if message.parent_message else None,
+        }
+        for message in messages
+    ]
+    return JsonResponse(conversations, safe=False, status=200)
