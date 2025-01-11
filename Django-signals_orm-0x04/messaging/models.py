@@ -9,7 +9,7 @@ class User(AbstractUser):
 
 class GetUnreadMessages(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(read=False)
+        return super().get_queryset().filter(read=False).only('message_id', 'sender', 'receiver', 'content', 'timestamp', 'parent_message')
 
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
