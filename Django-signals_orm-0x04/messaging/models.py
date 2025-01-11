@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .managers import GetUnreadMessages
+from .managers import UnreadMessagesManager
 
 class User(AbstractUser):
     user_id = models.AutoField(primary_key=True)
@@ -26,7 +26,7 @@ class Message(models.Model):
     )
     read = models.BooleanField(default=False)
     objects = models.Manager()
-    unread = GetUnreadMessages()
+    unread = UnreadMessagesManager()
 
     def __str__(self):
         return f"Message {self.message_id} from {self.sender_id} to {self.reciever_id}"
