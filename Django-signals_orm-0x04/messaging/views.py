@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .models import Message
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.views.decorators.cache import cache_page
 
 @login_required
 def delete_user(request):
@@ -27,6 +28,7 @@ def fetch_replies(message):
     ]
 
 @login_required
+@cache_page(60)
 def get_threaded_conversation(request, message_id):
     root_message = get_object_or_404(Message.objects.select_related('sender', 'receiver'), id=message_id)
     if root_message.recipient != request.user and root_message.sender != request.user:
