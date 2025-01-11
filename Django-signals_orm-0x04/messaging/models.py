@@ -1,15 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .managers import GetUnreadMessages
 
 class User(AbstractUser):
     user_id = models.AutoField(primary_key=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email})"
-
-class GetUnreadMessages(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(read=False).only('message_id', 'sender', 'receiver', 'content', 'timestamp', 'parent_message')
 
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
