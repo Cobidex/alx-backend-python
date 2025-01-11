@@ -7,6 +7,10 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email})"
 
+class GetUnreadMessages(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(read=False)
+
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
@@ -23,6 +27,9 @@ class Message(models.Model):
         blank=True,
         related_name='replies'
     )
+    read = models.BooleanField(default=False)
+    objects = models.Manager()
+    unread = GetUnreadMessages()
 
     def __str__(self):
         return f"Message {self.message_id} from {self.sender_id} to {self.reciever_id}"

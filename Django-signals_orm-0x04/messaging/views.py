@@ -89,3 +89,17 @@ def get_user_conversations(request):
         for message in messages
     ]
     return JsonResponse(conversations, safe=False, status=200)
+
+@login_required
+def get_unread_messages(request):
+    unread_messages = Message.unread.filter(receiver=request.user)
+    unread_messages = [
+        {
+            "id": message.id,
+            "sender": message.sender.username,
+            "content": message.content,
+            "timestamp": message.timestamp,
+        }
+        for message in unread_messages
+    ]
+    return JsonResponse(unread_messages, safe=False, status=200)
