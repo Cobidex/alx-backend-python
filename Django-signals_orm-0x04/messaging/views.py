@@ -92,7 +92,7 @@ def get_user_conversations(request):
 
 @login_required
 def get_unread_messages(request):
-    unread_messages = Message.unread.unread_for_user.filter(receiver=request.user)
+    unread_messages = Message.unread.unread_for_user.filter(receiver=request.user).only('id', 'sender', 'receiver', 'content', 'timestamp')
     unread_messages = [
         {
             "id": message.id,
