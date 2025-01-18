@@ -1,7 +1,9 @@
 import logging
+import time
 from datetime import datetime
 from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpResponseForbidden
+from collections import defaultdict
 
 # Configure logging
 logging.basicConfig(
@@ -44,9 +46,6 @@ class RestrictAccessByTimeMiddleware:
         return response
 
 
-import time
-from collections import defaultdict
-from django.http import HttpResponseForbidden
 
 class OffensiveLanguageMiddleware:
     def __init__(self, get_response):
@@ -90,3 +89,22 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get("REMOTE_ADDR")
         return ip
+
+
+class RolePermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Check if the user is authenticated
+        if request.user.is_authenticated:
+            # Get the user's role from the request (adjust based on your model)
+            user_role = getattr(request.user, 'role', None)
+
+            # Define roles that are allowed
+            allowed_roles = ['admin', 'moderator']
+
+            if user_role not in allowed_roles:
+                return HttpResponseForbidden("You do not have permission to perform this action.")
+        
+        return self.get_response(request)
