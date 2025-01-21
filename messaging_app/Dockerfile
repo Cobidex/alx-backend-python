@@ -2,9 +2,9 @@ FROM python:3.10
 
 WORKDIR /app
 
-COPY Requirements.txt /app/
+COPY requirements.txt /app/
 
-RUN pip install --no-cache-dir -r Requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . /app/
 
