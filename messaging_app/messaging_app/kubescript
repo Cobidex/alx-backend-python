@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Ensure Minikube is installed
+if ! command_exists minikube; then
+    echo "Minikube is not installed. Please install it before running this script."
+    exit 1
+fi
+
+# Ensure kubectl is installed
+if ! command_exists kubectl; then
+    echo "kubectl is not installed. Please install it before running this script."
+    exit 1
+fi
+
+# Start Minikube cluster
+echo "Starting Minikube cluster..."
+minikube start
+if [ $? -ne 0 ]; then
+    echo "Failed to start Minikube. Please check the error above."
+    exit 1
+fi
+
+# Verify that the cluster is running
+echo "Verifying that the cluster is running..."
+kubectl cluster-info
+if [ $? -ne 0 ]; then
+    echo "Cluster is not running. Please check the error above."
+    exit 1
+fi
+
+# Retrieve available pods
+echo "Retrieving available pods..."
+kubectl get pods --all-namespaces
+if [ $? -ne 0 ]; then
+    echo "Failed to retrieve pods. Please check the error above."
+    exit 1
+fi
+
+# Success message
+echo "Kubernetes cluster is up and running!"
+echo "You can now use Minikube and kubectl to manage your local Kubernetes cluster."
