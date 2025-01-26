@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: django-messaging-container
-        image: stevecobidex/messaging_app:latest
+        image: stevecobidex/messaging_app-web:latest
         ports:
         - containerPort: 8000
         env:
