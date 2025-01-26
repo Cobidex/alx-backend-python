@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app-green
+  labels:
+    app: django_messaging-app
+    version: green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: django_messaging-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: django_messaging-app
+        version: green
+    spec:
+      containers:
+      - name: django-app
+        image: stevecobidex/django_messaging-app:latest
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 20
