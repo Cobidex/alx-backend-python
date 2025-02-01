@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: messaging_app_web-blue
+  name: messaging_app-blue
   labels:
     app: messaging_app
     version: blue
@@ -18,7 +18,7 @@ spec:
         version: blue
     spec:
       containers:
-      - name: django-app
+      - name: messaging_app
         image: stevecobidex/messaging_app-web:latest
         ports:
         - containerPort: 8000
