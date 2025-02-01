@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git credentialsId: 'github', url: 'https://github.com/cobidex/messaging_app.git', branch: 'main'
+            }
+        }
+
+        stage('Set Up Python Environment') {
+            steps {
+                sh 'python3 -m venv venv'
+                sh 'source venv/bin/activate'
+                sh 'pip3 install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'source venv/bin/activate && pytest --junitxml=report.xml'
+            }
+        }
+
+        stage('Publish Test Report') {
+            post {
+                always {
+                    junit 'report.xml'
+                }
+            }
+        }
+    }
+}

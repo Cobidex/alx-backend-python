@@ -4,17 +4,17 @@ set -e
 
 echo "Deploying Blue Version..."
 kubectl apply -f blue_deployment.yaml
-kubectl rollout status deployment/django-app-blue
+kubectl rollout status deployment/messaging_app-blue
 
 echo "Deploying Green Version..."
 kubectl apply -f green_deployment.yaml
-kubectl rollout status deployment/django-app-green
+kubectl rollout status deployment/messaging_app-green
 
 echo "Gradually switching traffic to the Green Version..."
-kubectl patch service django-app-service -p '{"spec":{"selector":{"app":"django-app","version":"green"}}}'
+kubectl patch service django-app-service -p '{"spec":{"selector":{"app":"messaging_app","version":"green"}}}'
 
 echo "Checking logs for errors in the Green Version..."
-kubectl logs -l app=django-app,version=green --tail=50
+kubectl logs -l app=messaging_app,version=green --tail=50
 echo "Green Version deployed successfully."
 
 echo "Blue-Green Deployment completed."
