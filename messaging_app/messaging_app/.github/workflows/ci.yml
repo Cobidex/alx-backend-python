@@ -1,9 +1,9 @@
-name: Django Test Workflow
+name: Django Test and Lint Workflow
 
 on:
   push:
     branches:
-      - main
+      - main 
   pull_request:
     branches:
       - main
@@ -37,6 +37,7 @@ jobs:
         source venv/bin/activate
         pip install --upgrade pip
         pip install -r messaging_app/requirements.txt
+        pip install flake8 coverage  # Install flake8 and coverage for linting and code coverage
 
     - name: Wait for MySQL to be ready
       run: |
@@ -55,3 +56,20 @@ jobs:
         source venv/bin/activate
         python messaging_app/manage.py test
 
+    - name: Run flake8 for linting
+      run: |
+        source venv/bin/activate
+        flake8 messaging_app --max-line-length=79  # Adjust the path to your Django app and any other flake8 options
+
+    - name: Generate code coverage report
+      run: |
+        source venv/bin/activate
+        coverage run --source='messaging_app' manage.py test  # Run tests with coverage tracking
+        coverage report  # Display coverage report in the logs
+        coverage html  # Generate an HTML report for viewing in a browser
+
+    - name: Upload code coverage as build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-report
+        path: coverage-html
