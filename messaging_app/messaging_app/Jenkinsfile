@@ -4,7 +4,13 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git credentialsId: 'github', url: 'https://github.com/cobidex/messaging_app.git', branch: 'main'
+                script {
+                    def branchName = 'main'
+                    git credentialsId: 'github', url: 'https://github.com/cobidex/messaging_app.git', branch: branchName
+
+                    // Verify the branch
+                    sh 'git branch'
+                }
             }
         }
 
@@ -12,7 +18,7 @@ pipeline {
             steps {
                 sh 'python3 -m venv venv'
                 sh 'source venv/bin/activate'
-                sh 'pip3 install -r requirements.txt'
+                sh 'pip3 install -r messaging_app/requirements.txt'
             }
         }
 
